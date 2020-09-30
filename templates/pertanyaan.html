@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="static/argon-design-system.min.css" rel="stylesheet">
+    <link type="text/css" href="static/font-awesome.css" rel="stylesheet">
+    <link type="text/css" href="static/nucleo-icons.css" rel="stylesheet">
+    <link type="text/css" href="static/nucleo-svg.css" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        td {
+            padding-right:20px;
+        }
+
+        table {
+            font-size:.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center justify-content-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 style="text-align:center" class="h2 text-white mb-0">DISC TEST</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card" style="margin-bottom:80px">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Pertanyaan</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="custom-control mb-2">
+                            <label for="name">Pilihan yang menggambarkan kondisi yang paling mendekati dan mewakili Anda <b>(Centang yang benar)</b></label>
+                            {% for x, i in pertanyaan%}
+                            <table id="pertanyaan" class="mb-2 card p-3">
+                                    <tr>
+                                        <td>Pilih</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr id="isipertanyaan">
+                                        <td><input name="p{{x}}" class="form-check-input mt-0 ml-0" style="position:inherit"  type="radio"></td>
+                                        <td>{{i["satu"]["pilihan"]}}</td>
+                                    </tr>
+                                    <tr id="isipertanyaan">
+                                        <td><input name="p{{x}}" class="form-check-input mt-0 ml-0" style="position:inherit"  type="radio"></td>
+                                        <td>{{i["dua"]["pilihan"]}}</td>
+                                    </tr>
+                                    <tr id="isipertanyaan">
+                                        <td><input name="p{{x}}" class="form-check-input mt-0 ml-0" style="position:inherit"  type="radio"></td>
+                                        <td>{{i["tiga"]["pilihan"]}}</td>
+                                    </tr>
+                                    <tr id="isipertanyaan">
+                                        <td><input name="p{{x}}" class="form-check-input mt-0 ml-0" style="position:inherit"  type="radio"></td>
+                                        <td>{{i["empat"]["pilihan"]}}</td>
+                                    </tr>
+                                </table>
+                               {%endfor%}
+                          
+                                <div style="padding-left:0px;">
+                                    <button id="lihathasil" class="btn btn-primary mt-2" type="submit">Lihat Hasil</button>
+                                        <form style="display:none" action="hasil" method="POST">
+                                            <input type="text" name="nama" value="{{nama}}">
+                                            <input type="text" name="email" value={{email}}>
+                                            <input type="text" name="jeniskelamin" value={{jeniskelamin}}>
+                                            <input type="text" name="usernameinstagram" value={{usernameinstagram}}>
+                                            <input type="text" name="json" id="json">
+                                            <input type="submit" name="jsonsubmit" id="jsonsubmit">
+                                        </form>
+                                </div>
+                   
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="static/bootstrap.min.js"></script>
+<script src="static/jquery.min.js"></script>
+<script src="static/popper.min.js"></script>
+<script src="static/argon-design-system.js"></script>
+<script>
+    let pertanyaan = [	{satu:{pilihan:"Memberi semangat",prefix:"I"},dua:{pilihan:"Petualang",prefix:"D"},tiga:{pilihan:"Teliti",prefix:"C"},empat:{pilihan:"Mudah menyesuaikan diri", prefix:"S"}},
+	{satu:{pilihan:"Berpendirian Teguh",prefix:"C"},dua:{pilihan:"Suka bercerita",prefix:"I"},tiga:{pilihan:"Senang membujuk",prefix:"D"},empat:{pilihan:"Suka kedamaian", prefix:"S"}},
+	{satu:{pilihan:"Mau mengalah",prefix:"S"},dua:{pilihan:"Suka berkorban",prefix:"C"},tiga:{pilihan:"Pandai bergaul",prefix:"I"},empat:{pilihan:"Berkemauan Kuat", prefix:"D"}},
+	{satu:{pilihan:"Penuh pertimbangan",prefix:"C"},dua:{pilihan:"Senang dibimbing",prefix:"S"},tiga:{pilihan:"Suka bersaing",prefix:"D"},empat:{pilihan:"Suka meyakinkan", prefix:"I"}},
+]
+
+document.querySelector("#lihathasil").addEventListener("click",(e)=>{
+    payload = []
+
+document.querySelectorAll("#pertanyaan").forEach((a)=>{
+        obj = {}
+       a.querySelectorAll("tbody tr#isipertanyaan").forEach((e,i)=>{
+            let w1 = e.querySelectorAll("td")[0].querySelector("input").checked;
+            let w2 = e.querySelectorAll("td")[1].innerHTML
+            if(i===0){
+                obj["satu"]={pilihan:w2,checked:w1}
+            }
+            else if(i===1){
+                obj["dua"]={pilihan:w2,checked:w1}
+            }else if(i===2){
+                obj["tiga"]={pilihan:w2,checked:w1}
+            }else if(i===3){
+                obj["empat"]={pilihan:w2,checked:w1}
+            }
+
+           })
+        payload.push(obj);
+})
+
+count = {"D":0,"I":0,"S":0,"C":0}
+
+payload.forEach((a,b)=>{
+    Object.keys(a).map((c,d)=>{
+        let checked = a[c].checked
+        let prefix = pertanyaan[b][c].prefix
+        if(checked){
+            count[prefix]=count[prefix]+1;
+        }
+    })
+})
+
+max = 0;
+objmax = null;
+Object.keys(count).forEach((val)=>{
+    if(count[val]>max){
+        max=count[val];
+        objmax=val;
+    }else{
+        max=max;
+    }
+})
+
+awww = {
+    jawabanpertanyaan : payload,
+    count : count,
+    kesimpulan : {
+        max:max,
+        objmax:objmax
+    }
+}
+
+let load = JSON.stringify(awww)
+document.querySelectorAll("#json")[0].value=load;
+document.querySelectorAll("#jsonsubmit")[0].click();
+})
+
+
+
+
+</script>
+</html>

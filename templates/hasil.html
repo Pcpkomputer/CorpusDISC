@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="static/argon-design-system.min.css" rel="stylesheet">
+    <link type="text/css" href="static/font-awesome.css" rel="stylesheet">
+    <link type="text/css" href="static/nucleo-icons.css" rel="stylesheet">
+    <link rel="icon" href="static/logo.png" type="image/png">
+    <link type="text/css" href="static/nucleo-svg.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css">
+    <title>DISC Corpus</title>
+</head>
+<body>
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center justify-content-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 style="text-align:center" class="h2 text-white mb-0">HASIL TEST</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt--6">
+        <div class="row" style="margin-bottom:50px">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Hasil</h3>
+                    </div>
+                    <form class="card-body" method="GET" action="">
+                        <div class="custom-control mb-2">
+                            <label for="name">Nama Lengkap : </label>
+                            <input readonly aria-describedby="addon-right addon-left" required name="name" value="{{nama}}" placeholder="Nama Lengkap" class="form-control " value="">
+                        </div>
+                        <div class="custom-control mb-2">
+                            <label for="name">Alamat Email : </label>
+                            <input readonly aria-describedby="addon-right addon-left" value="{{email}}" type="email" required name="email" placeholder="Alamat Email" class="form-control " value="">
+                        </div>
+                        <div class="custom-control mb-2">
+                            <label for="email">Jenis Kelamin : </label>
+                            <div class="row">
+                                {% if jeniskelamin=='L'%}
+                                <div class="custom-control custom-radio mb-3 col-lg-2 ml-4">
+                                    <input type="radio" id="customRadio1" required name="jeniskelamin" checked value="0" checked="" class="custom-control-input ">
+                                    <label class="custom-control-label" for="customRadio1">Laki - laki</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-3 col-lg-2 ml-4">
+                                    <input type="radio" id="customRadio1" readonly required name="jeniskelamin" value="1" class="custom-control-input ">
+                                    <label class="custom-control-label" for="customRadio1">Perempuan</label>
+                                </div>
+                                {%else%}
+                                <div class="custom-control custom-radio mb-3 col-lg-2 ml-4">
+                                    <input type="radio" id="customRadio1" required name="jeniskelamin" readonly value="0" class="custom-control-input ">
+                                    <label class="custom-control-label" for="customRadio1">Laki - laki</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-3 col-lg-2 ml-4">
+                                    <input type="radio" id="customRadio1" checked required name="jeniskelamin" value="1" class="custom-control-input ">
+                                    <label class="custom-control-label" for="customRadio1">Perempuan</label>
+                                </div>
+                                {%endif%}
+                              
+                            </div>
+                        </div>
+                        <div class="custom-control mb-4">
+                            <label for="name">Username Instagram : </label>
+                            <input readonly aria-describedby="addon-right addon-left" value="{{usernameinstagram}}" required name="usernameinstagram" placeholder="Username Instagram" class="form-control " value="">
+                        </div>
+                        <div class="mb-2 card ml-4 p-4" style="background:linear-gradient(35deg,#5e72e4,#7b62e4)!important;color:white">
+                            <label for="name">Hasil :</label>
+                            <label>{{penjelasan}}</label>
+                        </div>
+                        <div class="mb-2 card ml-4 p-4" style="background:linear-gradient(35deg,#2f692b,#3ad03f)!important;color:white">
+                            <label for="name">Kelebihan :</label>
+                            <label>{{kelebihan}}</label>
+                        </div>
+                        <div class="mb-2 card ml-4 p-4" style="background:linear-gradient(35deg,#ff5a4e,#ff3223)!important;color:white">
+                            <label for="name">Kekurangan :</label>
+                            <label>{{kekurangan}}</label>
+                        </div>
+                        <div class="mb-2 card ml-4 p-4">
+                            <div class="card-body">
+                                <table id="table" ></table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="static/bootstrap.min.js"></script>
+<script src="static/jquery.min.js"></script>
+<script src="static/popper.min.js"></script>
+<script src="static/argon-design-system.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+<script>
+    var $table = $('#table')
+
+    var data = {{data | safe}}
+  $table.bootstrapTable({  columns: [{
+  field: 'id',
+  title: 'ID Caption'
+}, {
+  field: 'username',
+  title: 'Username Instagram'
+}, {
+  field: 'captionasli',
+  title: 'Caption Instagram Asli',
+}, {
+  field: 'captionpraproses',
+  title: 'Caption Instagram Praproses',
+},{
+  field: 'disc',
+  title: 'DISC',
+  formatter : (val,id)=>{
+      console.log(id)
+      return `<div class="btn btn-primary">${val}</div>
+     `;
+  }
+  
+}],data: data,formatLoadingMessage: function() {
+        return '';
+    }})
+</script>
+</html>
